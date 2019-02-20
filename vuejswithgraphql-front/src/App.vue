@@ -16,18 +16,18 @@
     </v-toolbar>
 
     <v-content>
-      <HelloWorld/>
+      <ApolloExample/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+import ApolloExample from './components/ApolloExample'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ApolloExample
   },
   data () {
     return {
