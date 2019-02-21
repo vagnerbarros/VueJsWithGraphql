@@ -16,6 +16,10 @@ const typeDefs = gql`
   type Mutation {
     addClient(name: String!, email: String!, phone: String): Client
   }
+
+  type Subscription {
+    clientAdded: Client
+  }
 `;
 
 module.exports = typeDefs;

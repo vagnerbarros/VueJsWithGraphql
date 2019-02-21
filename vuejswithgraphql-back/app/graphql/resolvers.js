@@ -1,4 +1,9 @@
+const { PubSub } = require('apollo-server');
+const pubsub = new PubSub();
+
 const controller = require('../controller/controller');
+
+const CLIENT_ADDED = 'CLIENT_ADDED';
 
 const resolvers = {
     Query: {
@@ -8,11 +13,17 @@ const resolvers = {
       addClient: async (_, args) => {
         try{
           let newClient = await controller.cliente.save(args);
+          pubsub.publish(CLIENT_ADDED, { clientAdded: args });
           return newClient;
         }
         catch(err){
           return err.message;
         }
+      }
+    },
+    Subscription: {
+      clientAdded: {
+        subscribe: () => pubsub.asyncIterator([CLIENT_ADDED])
       }
     }
 };
