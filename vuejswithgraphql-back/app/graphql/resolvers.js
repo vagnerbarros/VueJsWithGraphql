@@ -13,7 +13,7 @@ const resolvers = {
       addClient: async (_, args) => {
         try{
           let newClient = await controller.cliente.save(args);
-          pubsub.publish(CLIENT_ADDED, { clientAdded: args });
+          pubsub.publish(CLIENT_ADDED, { clientAdded: newClient });
           return newClient;
         }
         catch(err){

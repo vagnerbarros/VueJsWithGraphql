@@ -7,7 +7,7 @@
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>{{ props.item.phone }}</td>
-            <td class="justify-center layout px-0">
+            <td class="align-right">
             <v-icon class="mr-2">edit</v-icon>
             <v-icon>delete</v-icon>
             </td>
@@ -44,6 +44,7 @@
   import {mapState, mapGetters, mapActions} from 'vuex';
   import CLIENTS from '../graphql/Clients.gql'
   import ADDCLIENT from '../graphql/AddClient.gql'
+  import CLIENTADDED from '../graphql/ClientAdded.gql';
 
   export default {
     data () {
@@ -67,9 +68,17 @@
 
     apollo: {
 
-        clients: {
-            query: CLIENTS
+      clients: {
+        query: CLIENTS,
+        subscribeToMore: {
+          document: CLIENTADDED,
+          updateQuery: (previousResult, { subscriptionData }) => {
+            return {
+              clients: [...previousResult.clients, subscriptionData.data.clientAdded, ],
+            }
+          }
         }
+      }
     },
 
     computed: {
