@@ -1,0 +1,7 @@
+#import "./ClientFragment.gql"
+
+mutation removeClient ($id: String!) {
+  removeClient(id: $id) {
+    ...Client
+  }
+}

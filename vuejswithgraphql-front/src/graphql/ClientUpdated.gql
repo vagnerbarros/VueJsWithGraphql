@@ -1,0 +1,7 @@
+#import "./ClientFragment.gql"
+
+subscription clientUpdated {
+  clientUpdated {
+    ...Client
+  }
+}

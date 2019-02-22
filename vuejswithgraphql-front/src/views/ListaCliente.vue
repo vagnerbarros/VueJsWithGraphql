@@ -2,14 +2,14 @@
   <v-container grid-list-md>
     <v-layout row wrap>
       <v-flex xs12 sm12>
-        <v-data-table :headers="headers" :items="clients" :loading="$apollo.loading" :search="busca" class="elevation-1">
+        <v-data-table :headers="headers" :rows-per-page-items="[100]" :items="clients" :loading="$apollo.loading" :search="busca" class="elevation-1">
         <template slot="items" slot-scope="props">
             <td>{{ props.item.name }}</td>
             <td>{{ props.item.email }}</td>
             <td>{{ props.item.phone }}</td>
             <td class="align-right">
-            <v-icon class="mr-2">edit</v-icon>
-            <v-icon>delete</v-icon>
+            <v-icon class="mr-2" @click="editClient(props.item)">edit</v-icon>
+            <v-icon @click="removeClient(props.item)">delete</v-icon>
             </td>
         </template>
         </v-data-table>
@@ -42,9 +42,15 @@
 <script>
 
   import {mapState, mapGetters, mapActions} from 'vuex';
-  import CLIENTS from '../graphql/Clients.gql'
-  import ADDCLIENT from '../graphql/AddClient.gql'
+  import CLIENTS from '../graphql/Clients.gql';
+  import ADDCLIENT from '../graphql/AddClient.gql';
+  import UPDATECLIENT from '../graphql/UpdateClient.gql';
+  import REMOVECLIENT from '../graphql/RemoveClient.gql'
+  
+  //subscriptions
   import CLIENTADDED from '../graphql/ClientAdded.gql';
+  import CLIENTREMOVED from '../graphql/ClientRemoved.gql';
+  import CLIENTUPDATED from '../graphql/ClientUpdated.gql';
 
   export default {
     data () {
@@ -55,6 +61,7 @@
           { text: 'Phone', value: 'phone' },
           { text: 'Ações', value: 'name', align:'center',  sortable: false }
         ],
+        editMode: false,
         valid: true,
         client: {
             name: '',
@@ -70,14 +77,36 @@
 
       clients: {
         query: CLIENTS,
-        subscribeToMore: {
+        subscribeToMore: [{
           document: CLIENTADDED,
           updateQuery: (previousResult, { subscriptionData }) => {
             return {
               clients: [...previousResult.clients, subscriptionData.data.clientAdded, ],
             }
           }
-        }
+        },
+        {
+          document: CLIENTREMOVED,
+          updateQuery: (previousResult, { subscriptionData }) => {
+            return {
+              clients: [...previousResult.clients.filter(client => client.id != subscriptionData.data.clientRemoved.id ), ],
+            }
+          }
+        },
+        {
+          document: CLIENTUPDATED,
+          updateQuery: (previousResult, { subscriptionData }) => {
+
+            let clientUpdated = previousResult.clients.find(client => client.id == subscriptionData.data.clientUpdated.id);
+            if(clientUpdated){
+              clientUpdated = subscriptionData.data.clientUpdated;
+            }
+
+            return {
+              clients: [...previousResult.clients ],
+            }
+          }
+        }]
       }
     },
 
@@ -88,30 +117,47 @@
 
     methods: {
 
-        async saveClient(){
-            
-            const result = await this.$apollo.mutate({
-                mutation: ADDCLIENT,
-                variables: this.$data.client
-            })
-        },
+      async saveClient(){
+        
+        if(this.editMode){
 
-        temp(){
-
-            // this.$apollo.provider.defaultClient;
-            // this.$apollo.queries;
-            // this.$apollo.subscription;
-            // this.$apollo.provider;
-            // this.$apollo.loading;
-            // this.$apollo.skipAllQueries;
-            // this.$apollo.skipAllSubscriptions;
-            // this.$apollo.skipAll;
+          const result = await this.$apollo.mutate({
+            mutation: UPDATECLIENT,
+            variables: this.client
+          });
         }
-    },
+        else{
 
-    created(){
-      
+          const result = await this.$apollo.mutate({
+            mutation: ADDCLIENT,
+            variables: this.client
+          })
+        }
+        this.initialState();
+      },
 
+      async removeClient(client){
+        const result = await this.$apollo.mutate({
+          mutation: REMOVECLIENT,
+          variables: { 
+            id: client.id
+          }
+        })
+      },
+
+      editClient(client){
+        this.editMode = true;
+        this.client = client;
+      },
+
+      initialState(){
+        this.client = {
+            name: '',
+            email: '',
+            phone: ''
+        }
+        this.editMode = false;
+      }
     }
   }
 </script>

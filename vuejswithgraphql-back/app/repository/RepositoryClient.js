@@ -38,7 +38,7 @@ class RepositoryClient{
     async update(client){
 
         try{
-            let updated = await Client.findOneAndUpdate({_id: client._id}, client, {new: true}).exec(); 
+            let updated = await Client.findOneAndUpdate({_id: client.id}, client, {new: true}).exec(); 
             return updated;
         }
         catch(err){

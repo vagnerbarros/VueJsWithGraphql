@@ -15,10 +15,14 @@ const typeDefs = gql`
 
   type Mutation {
     addClient(name: String!, email: String!, phone: String): Client
+    removeClient(id: String): Client
+    updateClient(id: String!, name: String, email: String, phone: String): Client
   }
 
   type Subscription {
     clientAdded: Client
+    clientRemoved: Client
+    clientUpdated: Client
   }
 `;
 
