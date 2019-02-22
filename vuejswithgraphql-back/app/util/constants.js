@@ -2,15 +2,15 @@ var URL_MONGO = '';
 var MONGO_OPTIONS = {}
 
 if(process.env.NODE_ENV == 'test'){
-    URL_MONGO = 'mongodb://www.anronsoftware.com.br:27017/admin';
-    MONGO_OPTIONS = {user: 'anron', pass: '@n40ns', dbName: 'testes', useNewUrlParser: true};
+    URL_MONGO = 'mongodb://<URL_TO_MONGO>:27017/admin';
+    MONGO_OPTIONS = {user: '<USER>', pass: '<PASSWORD>', dbName: '<DB_NAME>', useNewUrlParser: true};
 }
 else{
-    URL_MONGO = 'mongodb://www.anronsoftware.com.br:27017/admin';
-    MONGO_OPTIONS = {user: 'anron', pass: '@n40ns', dbName: 'graphql', useNewUrlParser: true};
+    URL_MONGO = 'mongodb://<URL_TO_MONGO>:27017/admin';
+    MONGO_OPTIONS = {user: '<USER>', pass: '<PASSWORD>', dbName: '<DB_NAME>', useNewUrlParser: true};
 }
 
-const JWT_SECRET = '@N40NSECRET';
+const JWT_SECRET = '';
 const EXPIRACAO_TOKEN = 86400; // EM SEGUNDOS (1 DIA)
 
 module.exports = {
