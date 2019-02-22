@@ -1,0 +1,7 @@
+#import "./ClientFragment.gql"
+
+mutation updateClient ($id: String!, $name: String!, $email: String!, $phone: String) {
+  updateClient (id: $id, name: $name, email: $email, phone: $phone) {
+    ...Client
+  }
+}

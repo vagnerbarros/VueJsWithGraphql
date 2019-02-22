@@ -1,0 +1,7 @@
+#import "./ClientFragment.gql"
+
+query clients {
+  clients {
+    ...Client
+  }
+}
