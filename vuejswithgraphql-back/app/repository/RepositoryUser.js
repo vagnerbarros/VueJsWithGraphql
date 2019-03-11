@@ -1,11 +1,11 @@
-var Client = require('../schema/client');
+var User = require('../schema/user');
 
-class RepositoryClient{
+class RepositoryUser{
 
-    async save(newClient){
+    async save(newUser){
 
         try{
-            let saved = await newClient.save();
+            let saved = await newUser.save();
             return saved;
         }
         catch(err){
@@ -16,8 +16,8 @@ class RepositoryClient{
     async list(){
 
         try{
-            let clients = await Client.find({}).exec();
-            return clients;
+            let users = await User.find({}).exec();
+            return users;
         }
         catch(err){
             throw err;
@@ -27,7 +27,7 @@ class RepositoryClient{
     async remove(id){
 
         try{
-            let deleted = await Client.findOneAndRemove({_id: id}).exec();
+            let deleted = await User.findOneAndRemove({_id: id}).exec();
             return deleted;
         }
         catch(err){
@@ -35,10 +35,10 @@ class RepositoryClient{
         }
     }
 
-    async update(client){
+    async update(user){
 
         try{
-            let updated = await Client.findOneAndUpdate({_id: client.id}, client, {new: true}).exec(); 
+            let updated = await User.findOneAndUpdate({_id: user.id}, user, {new: true}).exec(); 
             return updated;
         }
         catch(err){
@@ -51,11 +51,16 @@ class RepositoryClient{
         return await this.query({_id: id});
     }
 
+    async findEmail(email){
+
+        return await this.query({ email: email});
+    }
+
     async query(query){
 
         try{
-            let client = await Client.findOne(query).exec();
-            return client;
+            let user = await User.findOne(query).exec();
+            return user;
         } 
         catch(err){
             throw err;
@@ -63,7 +68,7 @@ class RepositoryClient{
     }
 }
 
-var client = new RepositoryClient();
+var user = new RepositoryUser();
 
-module.exports = client;
+module.exports = user;
 

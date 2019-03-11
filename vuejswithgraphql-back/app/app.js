@@ -7,15 +7,27 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 require('./util/mongoose');
 
+const { merge } = require("lodash");
+const { makeExecutableSchema } = require('graphql-tools');
+
+let client = require('./graphql/resolvers/client');
+let user = require('./graphql/resolvers/user');
+
+const schemas = makeExecutableSchema({
+  typeDefs: require('./graphql/schema'),
+  resolvers: merge(client, user)
+})
+
 app.use(bodyParser.urlencoded({ limit: '50mb', extended : true}));
 app.use(bodyParser.json({limit : '50mb'}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-const typeDefs = require('./graphql/schema');
-const resolvers = require('./graphql/resolvers');
+// const resolvers = require('./graphql/resolvers');
   
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ 
+  schema: schemas
+});
 
 server.applyMiddleware({ app });
 
