@@ -11,10 +11,11 @@ const { merge } = require("lodash");
 const { makeExecutableSchema } = require('graphql-tools');
 
 let client = require('./graphql/resolvers/client');
+let user = require('./graphql/resolvers/user');
 
 const schemas = makeExecutableSchema({
   typeDefs: require('./graphql/schema'),
-  resolvers: merge(client)
+  resolvers: merge(client, user)
 })
 
 app.use(bodyParser.urlencoded({ limit: '50mb', extended : true}));
