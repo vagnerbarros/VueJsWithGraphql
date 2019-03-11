@@ -1,7 +1,7 @@
 const { PubSub } = require('apollo-server');
 const pubsub = new PubSub();
 
-const controller = require('../controller/controller');
+const controller = require('../../controller/controller');
 
 const CLIENT_ADDED = 'CLIENT_ADDED';
 const CLIENT_REMOVED = 'CLIENT_REMOVED';
