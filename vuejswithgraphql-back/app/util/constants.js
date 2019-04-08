@@ -1,16 +1,7 @@
-var URL_MONGO = '';
-var MONGO_OPTIONS = {}
+var URL_MONGO = 'mongodb+srv://anron:t3st3@cluster0-cfpff.mongodb.net/admin';
+var MONGO_OPTIONS = { user: 'anron', pass: 't3st3', dbName: 'graphql', useNewUrlParser: true }
 
-if(process.env.NODE_ENV == 'test'){
-    URL_MONGO = 'mongodb://<URL_TO_MONGO>:27017/admin';
-    MONGO_OPTIONS = {user: '<USER>', pass: '<PASSWORD>', dbName: '<DB_NAME>', useNewUrlParser: true};
-}
-else{
-    URL_MONGO = 'mongodb://<URL_TO_MONGO>:27017/admin';
-    MONGO_OPTIONS = {user: '<USER>', pass: '<PASSWORD>', dbName: '<DB_NAME>', useNewUrlParser: true};
-}
-
-const JWT_SECRET = '';
+const JWT_SECRET = 'TESTE';
 const EXPIRACAO_TOKEN = 86400; // EM SEGUNDOS (1 DIA)
 
 module.exports = {
@@ -18,4 +9,4 @@ module.exports = {
     MONGO_OPTIONS,
     JWT_SECRET,
     EXPIRACAO_TOKEN
-} 
+}

@@ -46,11 +46,13 @@
   import ADDCLIENT from '../graphql/AddClient.gql';
   import UPDATECLIENT from '../graphql/UpdateClient.gql';
   import REMOVECLIENT from '../graphql/RemoveClient.gql'
-  
+
   //subscriptions
   import CLIENTADDED from '../graphql/ClientAdded.gql';
   import CLIENTREMOVED from '../graphql/ClientRemoved.gql';
   import CLIENTUPDATED from '../graphql/ClientUpdated.gql';
+
+  import { gql } from 'apollo-boost';
 
   export default {
     data () {
