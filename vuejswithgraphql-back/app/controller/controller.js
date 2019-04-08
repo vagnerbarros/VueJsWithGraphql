@@ -1,5 +1,7 @@
-let cliente = require('../model/ModelClient');
+let client = require('../model/ModelClient');
+let user = require('../model/ModelUser');
 
 module.exports = {
-  cliente
+  client,
+  user
 };
