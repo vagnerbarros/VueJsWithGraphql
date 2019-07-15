@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  frontend:
+    image: graphql-frontend:1.0
+    build: ./vuejswithgraphql-frontend
+    container_name: graphql-frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
+    networks:
+      - webnet3
+
+  backend:
+    image: graphql-backend:1.0
+    build: ./vuejswithgraphql-backend
+    container_name: graphql-backend
+    ports:
+      - "6000:6000"
+    networks:
+      - webnet3
+networks:
+  webnet3:
