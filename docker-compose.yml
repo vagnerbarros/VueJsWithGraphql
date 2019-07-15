@@ -3,7 +3,7 @@ version: "3"
 services:
   frontend:
     image: graphql-frontend:1.0
-    build: ./vuejswithgraphql-frontend
+    build: ./vuejswithgraphql-front
     container_name: graphql-frontend
     ports:
       - "8081:80"
@@ -14,7 +14,7 @@ services:
 
   backend:
     image: graphql-backend:1.0
-    build: ./vuejswithgraphql-backend
+    build: ./vuejswithgraphql-back
     container_name: graphql-backend
     ports:
       - "6000:6000"
