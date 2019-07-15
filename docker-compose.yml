@@ -17,7 +17,7 @@ services:
     build: ./vuejswithgraphql-back
     container_name: graphql-backend
     ports:
-      - "6000:6000"
+      - "7001:7001"
     networks:
       - webnet3
 networks:
