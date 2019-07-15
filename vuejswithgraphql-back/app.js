@@ -5,7 +5,7 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-require('./util/mongoose');
+require('./util/mongo');
 
 const { merge } = require("lodash");
 const { makeExecutableSchema } = require('graphql-tools');
