@@ -3,6 +3,7 @@ import './plugins/vuetify'
 import App from './App.vue'
 import router from './router/router'
 import store from './store/store'
+import 'font-awesome/css/font-awesome.css';
 
 import VueApollo from 'vue-apollo';
 import { createProvider } from './vue-apollo'
