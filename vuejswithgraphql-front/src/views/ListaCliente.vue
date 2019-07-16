@@ -1,5 +1,6 @@
 <template>
   <div>
+    <dialog-client :dialog="showDialogClient" :client="client" @close="showDialogClient = false" @saveClient="save"></dialog-client>
     <v-container fluid>
       <v-card>
         <v-toolbar flat color="white">
@@ -28,6 +29,8 @@
   import {mapState, mapGetters, mapActions} from 'vuex';
   import CLIENTS from '../graphql/client/Clients.gql';
   import ADDCLIENT from '../graphql/client/AddClient.gql';
+  import UPDATECLIENT from '../graphql/client/UpdateClient.gql';
+  import REMOVECLIENT from '../graphql/client/RemoveClient.gql';
 
   //subscriptions
   import CLIENTADDED from '../graphql/client/ClientAdded.gql';
@@ -36,7 +39,14 @@
 
   import { gql } from 'apollo-boost';
 
+  import DialogClient from '../components/dialogs/DialogClient';
+
   export default {
+
+    components: {
+      DialogClient
+    },
+
     data () {
       return {
         headers: [
@@ -46,7 +56,14 @@
           { text: 'Ações', value: 'name', align:'center',  sortable: false }
         ],
         search: '',
+        showDialogClient: false,
         clients: [],
+        client: {
+          name: '',
+          email: '',
+          phone: ''
+        },
+        editMode: false
       }
     },
 
@@ -78,7 +95,6 @@
             if(clientUpdated){
               clientUpdated = subscriptionData.data.clientUpdated;
             }
-
             return {
               clients: [...previousResult.clients ],
             }
@@ -96,7 +112,7 @@
 
       newClient(){
 
-        this.$router.push('/clients/new');
+        this.showDialogClient = true;
       },
 
       async removeClient(client){
@@ -109,8 +125,26 @@
       },
 
       editClient(client){
-        this.$router.push({path: '/clients/edit', meta: { client: client}})
-        // this.client = client;
+        this.client = client;
+        this.editMode = true;
+        this.showDialogClient = true;
+      },
+
+      async save(client){
+
+        if(this.editMode){
+          const result = await this.$apollo.mutate({
+            mutation: UPDATECLIENT,
+            variables: this.client
+          });
+        }
+        else{
+          const result = await this.$apollo.mutate({
+            mutation: ADDCLIENT,
+            variables: this.client
+          });
+        }
+        this.initialState();
       },
 
       initialState(){
@@ -119,6 +153,7 @@
             email: '',
             phone: ''
         }
+        this.showDialogClient = false;
         this.editMode = false;
       }
     }

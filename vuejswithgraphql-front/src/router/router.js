@@ -6,7 +6,6 @@ import Login from '@/views/Login';
 import Dashboard from '@/views/Dashboard';
 import Sair from '@/views/Sair';
 import ListClients from '../views/ListaCliente';
-import ClientForm from '../views/FormClient';
 
 Vue.use(Router)
 
@@ -33,18 +32,6 @@ let router = new Router({
       path: '/clients',
       name: 'clientes',
       component: ListClients,
-      meta: { requiresAuth: true}
-    },
-    {
-      path: '/clients/new',
-      name: 'formNewClient',
-      component: ClientForm,
-      meta: { requiresAuth: true}
-    },
-    {
-      path: '/clients/edit',
-      name: 'formEditClient',
-      component: ClientForm,
       meta: { requiresAuth: true}
     }
   ]
