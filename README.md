@@ -19,10 +19,6 @@ If I could contribute in any way and you want to help me, buy me a coffee. :coff
 -   Docker
 -   Docker Composer
 
-## Demo Page
-
-<a href="http://ec2-18-231-183-249.sa-east-1.compute.amazonaws.com:8081" Target=”_blank” rel=”noopener”>Visit Demo Page</a>
-
 ### Login
 
 ```bash
