@@ -1,58 +1,52 @@
 <template>
-  <v-container grid-list-md>
-    <v-layout row wrap>
-      <v-flex xs12 sm12>
-        <v-data-table :headers="headers" :rows-per-page-items="[100]" :items="clients" :loading="$apollo.loading" :search="busca" class="elevation-1">
-        <template slot="items" slot-scope="props">
-            <td>{{ props.item.name }}</td>
-            <td>{{ props.item.email }}</td>
-            <td>{{ props.item.phone }}</td>
-            <td class="align-right">
-            <v-icon class="mr-2" @click="editClient(props.item)">edit</v-icon>
-            <v-icon @click="removeClient(props.item)">delete</v-icon>
-            </td>
-        </template>
-        </v-data-table>
-      </v-flex>
-      <v-flex xs12 sm12>
-          <v-form v-model="valid" ref="formCliente">
-              <v-container>
-                <v-layout row wrap>
-                  <v-flex xs12 sm4>
-                    <v-text-field label="Name" v-model="client.name"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm4>
-                    <v-text-field label="E-Mail" v-model="client.email"></v-text-field>
-                  </v-flex>
-                  <v-flex xs12 sm4>
-                    <v-text-field label="Phone" v-model="client.phone"></v-text-field>
-                  </v-flex>
-                </v-layout>
-                <v-layout justify-end>
-                    <v-btn >Cancel</v-btn>    
-                    <v-btn color="primary" @click="saveClient()" :loading="$apollo.loading" :disabled="!valid">Save</v-btn>
-                </v-layout>
-            </v-container>
-          </v-form>
-      </v-flex>    
-    </v-layout>
-  </v-container>
+  <div>
+    <dialog-client :dialog="showDialogClient" :client="client" @close="showDialogClient = false" @saveClient="save"></dialog-client>
+    <v-container fluid>
+      <v-card>
+        <v-toolbar flat color="white">
+          <v-text-field flat solo full-width single-line hide-details clearable v-model="search" max-width="300px" prepend-inner-icon="search" label="Search Client"></v-text-field>
+          <v-btn color="primary" @click="newClient()">New Client</v-btn>
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-data-table color="transparent" :headers="headers" :rows-per-page-items="[100]" :items="clients" :loading="$apollo.loading" :search="search">
+          <template slot="items" slot-scope="props">
+              <td>{{ props.item.name }}</td>
+              <td>{{ props.item.email }}</td>
+              <td>{{ props.item.phone }}</td>
+              <td class="justify-center layout px-0">
+                <v-icon class="mr-2" @click="editClient(props.item)">edit</v-icon>
+                <v-icon @click="removeClient(props.item)">delete</v-icon>
+              </td>
+          </template>
+          </v-data-table>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
 
   import {mapState, mapGetters, mapActions} from 'vuex';
-  import CLIENTS from '../graphql/Clients.gql';
-  import ADDCLIENT from '../graphql/AddClient.gql';
-  import UPDATECLIENT from '../graphql/UpdateClient.gql';
-  import REMOVECLIENT from '../graphql/RemoveClient.gql'
-  
+  import CLIENTS from '../graphql/client/Clients.gql';
+  import ADDCLIENT from '../graphql/client/AddClient.gql';
+  import UPDATECLIENT from '../graphql/client/UpdateClient.gql';
+  import REMOVECLIENT from '../graphql/client/RemoveClient.gql';
+
   //subscriptions
-  import CLIENTADDED from '../graphql/ClientAdded.gql';
-  import CLIENTREMOVED from '../graphql/ClientRemoved.gql';
-  import CLIENTUPDATED from '../graphql/ClientUpdated.gql';
+  import CLIENTADDED from '../graphql/client/ClientAdded.gql';
+  import CLIENTREMOVED from '../graphql/client/ClientRemoved.gql';
+  import CLIENTUPDATED from '../graphql/client/ClientUpdated.gql';
+
+  import { gql } from 'apollo-boost';
+
+  import DialogClient from '../components/dialogs/DialogClient';
 
   export default {
+
+    components: {
+      DialogClient
+    },
+
     data () {
       return {
         headers: [
@@ -61,15 +55,15 @@
           { text: 'Phone', value: 'phone' },
           { text: 'Ações', value: 'name', align:'center',  sortable: false }
         ],
-        editMode: false,
-        valid: true,
-        client: {
-            name: '',
-            email: '',
-            phone: ''
-        },
+        search: '',
+        showDialogClient: false,
         clients: [],
-        busca: '',
+        client: {
+          name: '',
+          email: '',
+          phone: ''
+        },
+        editMode: false
       }
     },
 
@@ -101,7 +95,6 @@
             if(clientUpdated){
               clientUpdated = subscriptionData.data.clientUpdated;
             }
-
             return {
               clients: [...previousResult.clients ],
             }
@@ -117,23 +110,9 @@
 
     methods: {
 
-      async saveClient(){
-        
-        if(this.editMode){
+      newClient(){
 
-          const result = await this.$apollo.mutate({
-            mutation: UPDATECLIENT,
-            variables: this.client
-          });
-        }
-        else{
-
-          const result = await this.$apollo.mutate({
-            mutation: ADDCLIENT,
-            variables: this.client
-          })
-        }
-        this.initialState();
+        this.showDialogClient = true;
       },
 
       async removeClient(client){
@@ -146,8 +125,26 @@
       },
 
       editClient(client){
-        this.editMode = true;
         this.client = client;
+        this.editMode = true;
+        this.showDialogClient = true;
+      },
+
+      async save(client){
+
+        if(this.editMode){
+          const result = await this.$apollo.mutate({
+            mutation: UPDATECLIENT,
+            variables: this.client
+          });
+        }
+        else{
+          const result = await this.$apollo.mutate({
+            mutation: ADDCLIENT,
+            variables: this.client
+          });
+        }
+        this.initialState();
       },
 
       initialState(){
@@ -156,6 +153,7 @@
             email: '',
             phone: ''
         }
+        this.showDialogClient = false;
         this.editMode = false;
       }
     }
