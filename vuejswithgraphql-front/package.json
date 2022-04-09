@@ -16,7 +16,7 @@
     "graphql": "^14.1.1",
     "lowdb": "^1.0.0",
     "mkdirp": "^0.5.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "shortid": "^2.2.8",
     "vue": "^2.5.22",
     "vue-apollo": "^3.0.0-beta.28",
